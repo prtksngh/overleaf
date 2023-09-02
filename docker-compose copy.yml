@@ -108,32 +108,15 @@ services:
         restart: always
         image: mongo:4.4
         container_name: mongo
-        command: "--replSet overleaf"
         expose:
-        - 27017
+            - 27017
         volumes:
-        - "./mongo_data:/data/db"
+            - ~/mongo_data:/data/db
         healthcheck:
-        test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
-        interval: 10s
-        timeout: 10s
-        retries: 5
-
-    mongoinit:
-        image: mongo:4.4
-        # this container will exit after executing the command
-        restart: "no"
-        depends_on:
-        mongo:
-            condition: service_healthy
-        entrypoint:
-        [
-            "mongo",
-            "--host",
-            "mongo:27017",
-            "--eval",
-            'rs.initiate({ _id: "overleaf", members: [ { _id: 0, host: "mongo:27017" } ] })',
-        ]
+            test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+            interval: 10s
+            timeout: 10s
+            retries: 5
 
     redis:
         restart: always
